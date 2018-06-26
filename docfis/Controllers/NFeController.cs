@@ -10,6 +10,7 @@ using System.Xml;
 
 namespace docfis.Controllers
 {
+    [Route("[controller]")]
     public class NFeController : Controller
     {
         [HttpPost]
@@ -37,11 +38,19 @@ namespace docfis.Controllers
             XmlDocument obj = new XmlDocument();
             obj.LoadXml(consStatServ);
 
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
-            NFeStatusServico4 servico = new NFeStatusServico4();
-            servico.ClientCertificates.Add(cert);
-            servico.Url = "https://nfeh.sefaz.ce.gov.br/nfe4/services/NFeStatusServico4?WSDL";
-            XmlNode node = servico.Execute(obj);
+            XmlNode node;
+
+            try
+            {
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+                NFeStatusServico4 servico = new NFeStatusServico4();
+                servico.ClientCertificates.Add(cert);
+                servico.Url = "https://nfeh.sefaz.ce.gov.br/nfe4/services/NFeStatusServico4?WSDL";
+                node = servico.Execute(obj);
+            }catch(Exception ex)
+            {
+                return ex.Message;
+            }
 
             return node.OuterXml;
         }
