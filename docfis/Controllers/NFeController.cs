@@ -19,6 +19,7 @@ namespace docfis.Controllers
         }
 
         [HttpPost]
+        [Route("statusservico")]
         public string StatusServico(DadosEnvio dados)
         {
             X509Certificate2 cert = Util.ObterCertificado("CN=BC MANUTENCAO DE VEICULOS EIRELI:24578949000131, OU=Autenticado por AR Servir, OU=RFB e-CNPJ A1, OU=Secretaria da Receita Federal do Brasil - RFB, L=Fortaleza, S=CE, O=ICP-Brasil, C=BR");
@@ -42,7 +43,7 @@ namespace docfis.Controllers
             servico.Url = "https://nfeh.sefaz.ce.gov.br/nfe4/services/NFeStatusServico4?WSDL";
             XmlNode node = servico.Execute(obj);
 
-            return cert.Subject;
+            return node.OuterXml;
         }
 
     }
